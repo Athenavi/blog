@@ -20,10 +20,13 @@ export default async function Post({ params }: { params: { slug: string } }) {
   const contentHtml = processedContent.toString()
 
   return (
-    <article>
+    <article className="prose dark:prose-invert">
       <h1 className="text-3xl font-bold mb-4">{data.title}</h1>
-      <p className="text-gray-500 mb-4">{data.date}</p>
-      <div dangerouslySetInnerHTML={{ __html: contentHtml }} className="prose" />
+      <p className="text-muted-foreground mb-8">{data.date}</p>
+      <div
+        dangerouslySetInnerHTML={{ __html: contentHtml }}
+        className="prose max-w-none"
+      />
     </article>
   )
 }
