@@ -13,18 +13,19 @@ export async function generateStaticParams() {
 }
 
 export default async function Post({ params }: { params: { slug: string } }) {
-  const fullPath = path.join(process.cwd(), 'posts', `${params.slug}.md`)
-  const fileContents = fs.readFileSync(fullPath, 'utf8')
-  const { data, content } = matter(fileContents)
-  const processedContent = await remark().use(html).process(content)
-  const contentHtml = processedContent.toString()
+  // 使用 await 等待 params
+  const { slug } = await params;
+
+  // 使用 slug 来构建全路径
+  const fullPath = path.join(process.cwd(), 'posts', `${slug}.md`);
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const { data, content } = matter(fileContents);
+  const processedContent = await remark().use(html).process(content);
 
   return (
     <article>
-      <h1 className="text-3xl font-bold mb-4">{data.title}</h1>
-      <p className="text-gray-500 mb-4">{data.date}</p>
-      <div dangerouslySetInnerHTML={{ __html: contentHtml }} className="prose" />
+      <h1>{data.title}</h1>
+      <div dangerouslySetInnerHTML={{ __html: processedContent.toString() }} />
     </article>
-  )
+  );
 }
-
